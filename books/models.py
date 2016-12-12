@@ -8,35 +8,24 @@ class Publisher(models.Model):
     country = models.CharField(max_length=50)
     website = models.URLField()
 
+    class Meta:
+        ordering = ["-name"]
+
     def __str__(self):
         return self.name
 
-    class Meta:
-        ordering = ['name']
-
 class Author(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=40)
-    email = models.EmailField(blank=True, verbose_name='e-mail')
+    salutation = models.CharField(max_length=10)
+    name = models.CharField(max_length=200)
+    email = models.EmailField()
+    headshot = models.ImageField(upload_to='author_headshots')
 
     def __str__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
-
-class BookManager(models.Manager):
-    def title_count(self, keyword):
-        return self.filter(title__icontains=keyword).count()
-
-class DahlBookManager(models.Manager):
-    def get_queryset(self):
-        return super(DahlBookManager, self).get_queryset().filter(author='Roald Dahl')
+        return self.name
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
-    authors = models.ManyToManyField(Author)
+    authors = models.ManyToManyField('Author')
     publisher = models.ForeignKey(Publisher)
-    publication_date = models.DateField(blank=True,null=True)
-    objects = BookManager()
-    dahl_objects = DahlBookManager()
+    publication_date = models.DateField()
 
-    def __str__(self):
-        return self.title

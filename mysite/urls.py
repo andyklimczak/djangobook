@@ -15,9 +15,12 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from . import views
+from books.views import PublisherList, PublisherBookList
 
 urlpatterns = [
     url(r'^hello/$', views.hello),
     url(r'^time/$', views.current_datetime),
     url(r'^time/plus/(\d{1,2})/$', views.hours_ahead),
+    url(r'^publishers/$', PublisherList.as_view()),
+    url(r'^books/([\w-]+)/$', PublisherBookList.as_view()),
 ]
